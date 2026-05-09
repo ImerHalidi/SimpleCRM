@@ -27,7 +27,7 @@ public class CustomerServiceImpl extends abstractService implements CustomerServ
         public static final String DELETE_CUSTOMER = "DELETE FROM customer where id=?";
     }
 
-    ;
+
 
     @Override
     public Customer create(Customer customer) {
