@@ -1,15 +1,21 @@
 package org.example.common;
 
-import javax.xml.transform.Result;
+
 import java.sql.*;
 
 public class DatabaseConnection {
-    private static final String Url = "jdbc:mysql://http://localhost/phpmyadmin/index.php?route=/database/structure&db=simple_crm";
+    private static final String Url = "jdbc:mysql://localhost:3306/simple_crm";
     private static final String Username = "root";
     private static final String Password = "";
 
-    public static Connection getConnection() throws SQLException{
-        return DriverManager.getConnection(Url,Username,Password);
+    public static Connection getConnection() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("MySQL Driver not found", e);
+        }
+
+        return DriverManager.getConnection(Url, Username, Password);
     }
 
     public static void close(Connection con , PreparedStatement ps) {
