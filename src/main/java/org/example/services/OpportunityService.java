@@ -1,4 +1,14 @@
 package org.example.services;
 
-public class OpportunityService {
+import org.example.domain.Opportunity;
+
+import java.util.List;
+
+public interface OpportunityService {
+    Opportunity create(Opportunity opportunity);
+    Opportunity findById(Long id);
+    List<Opportunity> findAll();
+    Opportunity update(Long id, Opportunity opportunity);
+    boolean delete(Long id);
+
 }

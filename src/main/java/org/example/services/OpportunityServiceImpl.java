@@ -1,4 +1,188 @@
 package org.example.services;
 
-public class OpportunityServiceImpl {
+import com.google.gson.annotations.SerializedName;
+import org.example.common.abstractService;
+import org.example.domain.Opportunity;
+import org.example.exceptions.ValidationException;
+import org.example.exceptions.NotFoundException;
+
+
+import java.awt.geom.RectangularShape;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+public class OpportunityServiceImpl extends abstractService implements OpportunityService {
+    public static class Sql{
+        public static final String INSERT_OPPORTUNITY="INSERT INTO opportunity (customer_id,title,value,status,expected_close_date) VALUES (?,?,?,?,?)";
+
+        public static final String FIND_BY_ID="SELECT * FROM opportunity where id=?";
+
+        public static final String FIND_ALL="SELECT * FROM opportunity";
+
+        public static final String UPDATE_OPPORTUNITY="UPDATE opportunity SET customer_id=?,title=?,value=?,status=?,expected_close_date=?,updated_at=NOW() WHERE id=?";
+
+        public static final String DELETE_OPPORTUNITY="DELETE FROM opportunity where id=?";
+
+    }
+
+    @Override
+    public Opportunity create(Opportunity opportunity){
+        String validationmessage=opportunity.validate();
+        if(validationmessage!=null){
+            throw new ValidationException(validationmessage);
+        }
+
+        Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement ps=null;
+
+        try {
+            con=getConnection();
+            ps=con.prepareStatement(Sql.INSERT_OPPORTUNITY, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1,opportunity.getCustomerId());
+            ps.setString(2,opportunity.getTitle());
+            ps.setString(3,opportunity.getStatus());
+            ps.setString(4,opportunity.getExpectedCloseDate());
+
+            ps.executeUpdate();
+            rs=ps.getGeneratedKeys();
+
+            if(rs.next()){
+                opportunity.setId(rs.getLong(1));
+            }
+            return opportunity;
+
+        } catch (Exception e) {
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps,rs);
+        }
+    }
+
+    @Override
+    public Opportunity findById(Long id) {
+        Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement ps = null;
+
+        try {
+            con=getConnection();
+            ps=con.prepareStatement(Sql.FIND_BY_ID);
+            ps.setLong(1,id);
+
+            rs=ps.executeQuery();
+            if(rs.next()){
+                return mapOpportunity(rs);
+            }
+            throw new NotFoundException("Opportunity not found");
+        }
+            catch (NotFoundException e) {
+                throw e;
+            }
+         catch (Exception e) {
+            throw handleException(e);
+
+        }
+        finally {
+            close(con,ps,rs);
+        }
+
+    }
+
+
+    @Override
+    public List<Opportunity> findAll(){
+        List<Opportunity>opportunities=new ArrayList<>();
+        Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement ps=null;
+
+        try {
+            con=getConnection();
+            ps=con.prepareStatement(Sql.FIND_ALL);
+           rs= ps.executeQuery();
+           while(rs.next()){
+               opportunities.add(mapOpportunity(rs));
+           }
+            return opportunities;
+        } catch (Exception e) {
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps,rs);
+        }
+
+    }
+
+    @Override
+    public Opportunity update(Long id,Opportunity opportunity){
+        findById(id);
+        String validationMessage= opportunity.validate();
+        if(validationMessage!=null){
+            throw new ValidationException(validationMessage);
+        }
+        Connection con=null;
+        PreparedStatement ps=null;
+
+        try {
+            con=getConnection();
+            ps=con.prepareStatement(Sql.UPDATE_OPPORTUNITY);
+            ps.setLong(1,opportunity.getCustomerId());
+            ps.setString(2,opportunity.getTitle());
+            ps.setString(3,opportunity.getStatus());
+            ps.setString(4,opportunity.getExpectedCloseDate());
+
+            ps.executeUpdate();
+            return findById(id);
+
+        } catch (Exception e) {
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps);
+        }
+
+    }
+
+    public boolean delete(Long id){
+        findById(id);
+        Connection con=null;
+        PreparedStatement ps=null;
+
+
+        try {
+            con=getConnection();
+            ps=con.prepareStatement(Sql.DELETE_OPPORTUNITY);
+            ps.setLong(1,id);
+            ps.executeUpdate();
+            return true;
+        }
+        catch (Exception e){
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps);
+        }
+    }
+
+    private Opportunity mapOpportunity(ResultSet rs)throws Exception
+    {
+        Opportunity opportunity=new Opportunity();
+        opportunity.setId(rs.getLong("id"));
+        opportunity.setCustomerId(rs.getLong("customer_id"));
+        opportunity.setTitle(rs.getString("title"));
+        opportunity.setValue(rs.getDouble("value"));
+        opportunity.setStatus(rs.getString("status"));
+        opportunity.setExpectedCloseDate(rs.getString("expected_close_date"));
+        opportunity.setCreatedAt(rs.getString("created_at"));
+        opportunity.setUpdatedAt(rs.getString("updated_at"));
+        return  opportunity;
+
+    }
+
 }
