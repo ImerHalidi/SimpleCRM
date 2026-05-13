@@ -13,14 +13,14 @@ import static org.example.common.DatabaseConnection.close;
 
 public class ContactPersonServiceImpl extends abstractService implements ContactPersonService {
     public static class Sql{
-        public static final String INSERT_CONTACT="INSERT INTO contact_person(customerId,fullName,email,phone,position) VALUES (?,?,?,?,?)";
+        public static final String INSERT_CONTACT="INSERT INTO contact_person(customer_id,full_name,email,phone,position) VALUES (?,?,?,?,?)";
 
         public static final String FIND_BY_ID="SELECT * FROM contact_person WHERE id = ?";
 
         public static final String FIND_ALL="SELECT * FROM contact_person ";
 
-        public static final String UPDATE_CONTACT="UPDATE contact_person SET contact_person=?, fullName=?,email=?,phone=?,position=?,update_at=NOW() WHERE id=?";
-
+        public static final String UPDATE_CONTACT =
+                "UPDATE contact_person SET customer_id = ?, full_name = ?, email = ?, phone = ?, position = ?, updated_at = NOW() WHERE id = ?";
         public static final String DELETE_CONTACT="DELETE FROM contact_person WHERE id=?";
     }
 
@@ -36,8 +36,8 @@ public class ContactPersonServiceImpl extends abstractService implements Contact
         try {
             con=getConnection();
             ps=con.prepareStatement(Sql.INSERT_CONTACT,Statement.RETURN_GENERATED_KEYS);
-            ps.setLong(1,contactPerson.getCustomerId());
-            ps.setString(2,contactPerson.getFullName());
+            ps.setLong(1,contactPerson.getCustomer_id());
+            ps.setString(2,contactPerson.getFull_name());
             ps.setString(3,contactPerson.getEmail());
             ps.setString(4,contactPerson.getPhone());
             ps.setString(5,contactPerson.getPosition());
@@ -125,13 +125,13 @@ public class ContactPersonServiceImpl extends abstractService implements Contact
         try {
             con=getConnection();
             ps=con.prepareStatement(Sql.UPDATE_CONTACT);
-            ps.setLong(1,contactPerson.getCustomerId());
-            ps.setString(2,contactPerson.getFullName());
+            ps.setLong(1,contactPerson.getCustomer_id());
+            ps.setString(2,contactPerson.getFull_name());
             ps.setString(3,contactPerson.getEmail());
             ps.setString(4,contactPerson.getPhone());
             ps.setString(5,contactPerson.getPosition());
             ps.setLong(6,id);
-            ps.executeQuery();
+            ps.executeUpdate();
             return findById(id);
 
         }
@@ -154,7 +154,7 @@ public class ContactPersonServiceImpl extends abstractService implements Contact
                 con=getConnection();
                 ps=con.prepareStatement(Sql.DELETE_CONTACT);
                 ps.setLong(1,id);
-                ps.executeQuery();
+                ps.executeUpdate();
 
                 return true;
             }
@@ -172,8 +172,8 @@ public class ContactPersonServiceImpl extends abstractService implements Contact
         private ContactPerson mapContactPerson (ResultSet rs) throws Exception{
             ContactPerson contactPerson=new ContactPerson();
             contactPerson.setId(rs.getLong("id"));
-            contactPerson.setCustomerId(rs.getLong("customer_id"));
-            contactPerson.setFullName(rs.getString("fullName"));
+            contactPerson.setCustomer_id(rs.getLong("customer_id"));
+            contactPerson.setFull_name(rs.getString("full_name"));
             contactPerson.setEmail(rs.getString("email"));
             contactPerson.setPhone(rs.getString("phone"));
             contactPerson.setPosition(rs.getString("position"));

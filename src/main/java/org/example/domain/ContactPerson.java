@@ -3,11 +3,11 @@ import com.google.gson.annotations.SerializedName;
 import org.example.common.AbstractEntity;
 
 public class ContactPerson extends AbstractEntity {
-    @SerializedName("customerId")
-    private Long customerId ;
+    @SerializedName("customer_id")
+    private Long customer_id;
 
-    @SerializedName("fullName")
-    private String fullName;
+    @SerializedName("full_name")
+    private String full_name;
 
     @SerializedName("email")
     private String email;
@@ -19,10 +19,10 @@ public class ContactPerson extends AbstractEntity {
     private String position;
 
     public String validate(){
-        if(customerId==null ){
+        if(customer_id ==null ){
             return "CustomerId Required";
         }
-        if(fullName==null||fullName.trim().isEmpty()){
+        if(full_name ==null|| full_name.trim().isEmpty()){
             return "FullName Is Required";
         }
         if(email==null||email.trim().isEmpty()){
@@ -38,18 +38,18 @@ public class ContactPerson extends AbstractEntity {
 
     }
 
-    public Long getCustomerId(){
-        return customerId;
+    public Long getCustomer_id(){
+        return customer_id;
     }
-    public void setCustomerId(Long customerId){
-        this.customerId=customerId;
+    public void setCustomer_id(Long customer_id){
+        this.customer_id = customer_id;
     }
 
-    public String getFullName(){
-        return fullName;
+    public String getFull_name(){
+        return full_name;
     }
-    public void setFullName(String fullName){
-        this.fullName=fullName;
+    public void setFull_name(String full_name){
+        this.full_name = full_name;
     }
 
     public String getEmail(){
