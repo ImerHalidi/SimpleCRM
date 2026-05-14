@@ -3,10 +3,10 @@ import com.google.gson.annotations.SerializedName;
 import org.example.common.AbstractEntity;
 
 public class InteractionLog extends AbstractEntity {
-    @SerializedName("customerId")
+    @SerializedName("customer_id")
     private Long customerId;
 
-    @SerializedName("contactPersonId")
+    @SerializedName("contact_person_id")
     private Long contactPersonId;
 
     @SerializedName("type")

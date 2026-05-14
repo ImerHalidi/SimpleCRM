@@ -154,7 +154,7 @@ public class InteractionLogServiceImpl extends abstractService implements Intera
         con=getConnection();
         ps=con.prepareStatement(Sql.DELETE_OPPORTUNITY);
         ps.setLong(1,id);
-        ps.executeQuery();
+        ps.executeUpdate();
         return true;
 
     } catch (Exception e) {
