@@ -3,7 +3,7 @@ import com.google.gson.annotations.SerializedName;
 import org.example.common.AbstractEntity;
 
 public class Opportunity extends AbstractEntity {
-        @SerializedName("customerId")
+        @SerializedName("customer_id")
         private Long customerId;
 
         @SerializedName("title")
@@ -15,7 +15,7 @@ public class Opportunity extends AbstractEntity {
         @SerializedName("status")
         private String status;
 
-        @SerializedName("expectedCloseDate")
+        @SerializedName("expected_close_date")
         private String expectedCloseDate;
 
         @Override
@@ -34,7 +34,7 @@ public class Opportunity extends AbstractEntity {
 
             }
 
-            if (!(status.equals("New") || status.equals("IN_PROGRESS") || status.equals("WON") || status.equals("LOST"))) {
+            if (!(status.equals("NEW") || status.equals("IN_PROGRESS") || status.equals("WON") || status.equals("LOST"))) {
                 return "invalid status";
             }
 

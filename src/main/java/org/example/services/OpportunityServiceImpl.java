@@ -45,8 +45,10 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
             ps=con.prepareStatement(Sql.INSERT_OPPORTUNITY, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1,opportunity.getCustomerId());
             ps.setString(2,opportunity.getTitle());
-            ps.setString(3,opportunity.getStatus());
-            ps.setString(4,opportunity.getExpectedCloseDate());
+            ps.setDouble(3,opportunity.getValue());
+            ps.setString(4,opportunity.getStatus());
+            ps.setString(5,opportunity.getExpectedCloseDate());
+
 
             ps.executeUpdate();
             rs=ps.getGeneratedKeys();
@@ -134,8 +136,10 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
             ps=con.prepareStatement(Sql.UPDATE_OPPORTUNITY);
             ps.setLong(1,opportunity.getCustomerId());
             ps.setString(2,opportunity.getTitle());
-            ps.setString(3,opportunity.getStatus());
-            ps.setString(4,opportunity.getExpectedCloseDate());
+            ps.setDouble(3,opportunity.getValue());
+            ps.setString(4,opportunity.getStatus());
+            ps.setString(5,opportunity.getExpectedCloseDate());
+            ps.setLong(6,id);
 
             ps.executeUpdate();
             return findById(id);
