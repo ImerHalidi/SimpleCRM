@@ -22,7 +22,7 @@ public class CustomerServiceImpl extends abstractService implements CustomerServ
 
         public static final String FIND_ALL = "SELECT * FROM customer";
 
-        public static final String UPDATE_CUSTOMER = "UPDATE customer SET name=?,industry=?,email=?,phone=?,status=?,updated_at=NOW() WHERE id= ?)";
+        public static final String UPDATE_CUSTOMER = "UPDATE customer SET name=?,industry=?,email=?,phone=?,status=?,updated_at=NOW() WHERE id= ?";
 
         public static final String DELETE_CUSTOMER = "DELETE FROM customer where id=?";
     }
