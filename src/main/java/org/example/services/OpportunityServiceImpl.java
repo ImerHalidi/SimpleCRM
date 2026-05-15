@@ -201,6 +201,45 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
 
     }
 
+    @Override
+    public List<Opportunity> filter(String status,Long customerId){
+        List<Opportunity>opportunities=new ArrayList<>();
+        Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement ps=null;
+        try {
+            con=getConnection();
+            StringBuilder sql=new StringBuilder("SELECT * FROM opportunity WHERE 1=1");
+            if(status!=null && !status.trim().isEmpty()){
+                sql.append(" AND status = ?");
+            }
+            if(customerId!=null){
+                sql.append(" AND customer_id = ?");
+            }
+            ps=con.prepareStatement(sql.toString());
+
+            int index=1;
+            if(status!= null&&!status.trim().isEmpty()){
+                ps.setString(index++,status);
+            }
+
+            if (customerId!=null){
+                ps.setLong(index++,customerId);
+            }
+            rs=ps.executeQuery();
+            while (rs.next()){
+                opportunities.add(mapOpportunity(rs));
+            }
+            return opportunities;
+
+        } catch (Exception e) {
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps,rs);
+        }
+    }
+
     private Opportunity mapOpportunity(ResultSet rs)throws Exception
     {
         Opportunity opportunity=new Opportunity();

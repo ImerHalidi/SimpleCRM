@@ -9,6 +9,7 @@ public interface InteractionLogService {
     InteractionLog findById(Long id);
     List<InteractionLog>findAll();
     InteractionLog update(Long id,InteractionLog interactionLog);
+    List<InteractionLog>findInteractionLogsByCustomerID(Long id);
     boolean delete(Long id);
 
 }

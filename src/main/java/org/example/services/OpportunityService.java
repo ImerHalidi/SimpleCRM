@@ -11,5 +11,6 @@ public interface OpportunityService {
     Opportunity update(Long id, Opportunity opportunity);
     boolean delete(Long id);
     List<Opportunity>findByCostumerId(Long customerId);
+    List<Opportunity> filter(String status,Long customerId);
 
 }

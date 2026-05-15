@@ -1,11 +1,7 @@
 package org.example.resources;
 
 import com.google.gson.Gson;
-import org.example.domain.ContactPerson;
-import org.example.domain.Customer;
 import org.example.domain.Opportunity;
-import org.example.services.CustomerService;
-import org.example.services.CustomerServiceImpl;
 import org.example.services.OpportunityService;
 import org.example.services.OpportunityServiceImpl;
 
@@ -32,11 +28,21 @@ public class OpportunityResource {
                     .entity(gson.toJson(createdOpportunity))
                     .build();
         }
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getAll(){
+//            return Response.ok(gson.toJson(opportunityService.findAll()))
+//                    .build();
+//    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(){
-            return Response.ok(gson.toJson(opportunityService.findAll()))
-                    .build();
+    public Response filter(
+            @QueryParam("status")String status,
+            @QueryParam("customerId")Long customerId
+    ){
+        return Response.ok(gson.toJson(opportunityService.filter(status,customerId)))
+                .build();
     }
 
     @GET

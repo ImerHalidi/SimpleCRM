@@ -23,6 +23,8 @@ public class InteractionLogServiceImpl extends abstractService implements Intera
         public static final String UPDATE_OPPORTUNITY="UPDATE interaction_log SET customer_id=?,contact_person_id=?,type=?,notes=?,updated_at=NOW() WHERE id=?";
 
         public static final String DELETE_OPPORTUNITY="DELETE FROM interaction_log where id=?";
+
+        public static final String FIND_BY_CUSTOMER_ID="SELECT * FROM interaction_log where customer_id=?";
     }
 
     @Override
@@ -103,6 +105,31 @@ public class InteractionLogServiceImpl extends abstractService implements Intera
         try {
             con=getConnection();
             ps=con.prepareStatement(Sql.FIND_ALL);
+            rs=ps.executeQuery();
+            while(rs.next()){
+                interactions.add(mapInteractionLog(rs));
+            }
+            return interactions;
+
+        } catch (Exception e) {
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps,rs);
+        }
+    }
+
+    @Override
+    public List<InteractionLog>findInteractionLogsByCustomerID(Long customerId){
+        List<InteractionLog>interactions=new ArrayList<>();
+        Connection con=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+
+        try {
+            con=getConnection();
+            ps=con.prepareStatement(Sql.FIND_BY_CUSTOMER_ID);
+            ps.setLong(1,customerId);
             rs=ps.executeQuery();
             while(rs.next()){
                 interactions.add(mapInteractionLog(rs));
