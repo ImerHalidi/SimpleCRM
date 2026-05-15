@@ -8,12 +8,15 @@ import javax.ws.rs.core.Response;
 
 import org.example.domain.ContactPerson;
 import org.example.domain.Customer;
+import org.example.domain.Opportunity;
 import org.example.services.CustomerService;
 import org.example.services.CustomerServiceImpl;
+import org.example.services.OpportunityService;
+import org.example.services.OpportunityServiceImpl;
 
 @Path("/customers")
 public class CustomerResource {
-
+    private final OpportunityService opportunityService = new OpportunityServiceImpl();
     private final CustomerService customerService = new CustomerServiceImpl();
 
     private final Gson gson = new Gson();
@@ -48,6 +51,16 @@ public class CustomerResource {
         return Response.ok(gson.toJson(customer))
                 .build();
     }
+
+    @GET
+    @Path("/{id}/opportunity")
+    @Produces(MediaType.APPLICATION_JSON)
+    public  Response findOpportunitiesByCustomer(@PathParam("id") Long id){
+        Opportunity opportunities= opportunityService.findById(id);
+        return Response.ok(gson.toJson(opportunityService.findByCostumerId(id)))
+                .build();
+    }
+
 
 
     @PUT

@@ -27,6 +27,7 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
 
         public static final String DELETE_OPPORTUNITY="DELETE FROM opportunity where id=?";
 
+        public static final String FIND_BY_CUSTOMER_ID="SELECT * FROM opportunity where customer_id=?";
     }
 
     @Override
@@ -172,6 +173,32 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
         finally {
             close(con,ps);
         }
+    }
+
+
+    @Override
+    public List<Opportunity> findByCostumerId(Long customerId){
+        List<Opportunity>opportunities=new ArrayList<>();
+        Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement ps=null;
+
+        try {
+            con=getConnection();
+            ps=con.prepareStatement(Sql.FIND_BY_CUSTOMER_ID);
+            ps.setLong(1,customerId);
+            rs= ps.executeQuery();
+            while(rs.next()){
+                opportunities.add(mapOpportunity(rs));
+            }
+            return opportunities;
+        } catch (Exception e) {
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps,rs);
+        }
+
     }
 
     private Opportunity mapOpportunity(ResultSet rs)throws Exception
