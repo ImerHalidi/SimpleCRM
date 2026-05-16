@@ -28,6 +28,9 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
         public static final String DELETE_OPPORTUNITY="DELETE FROM opportunity where id=?";
 
         public static final String FIND_BY_CUSTOMER_ID="SELECT * FROM opportunity where customer_id=?";
+
+        public static final String CHANGE_STATUS =
+                "UPDATE opportunity SET status = ?, updated_at = NOW() WHERE id = ?";
     }
 
     @Override
@@ -239,7 +242,42 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
             close(con,ps,rs);
         }
     }
+    @Override
+    public Opportunity changeStatus(Long id, String status) {
 
+        if (status == null || status.trim().isEmpty()) {
+            throw new ValidationException("Status is Required");
+        }
+
+        if (!(status.equals("NEW")
+                || status.equals("IN_PROGRESS")
+                || status.equals("WON")
+                || status.equals("LOST"))) {
+            throw new ValidationException("Invalid status");
+        }
+
+        findById(id);
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = getConnection();
+
+            ps = con.prepareStatement(Sql.CHANGE_STATUS);
+            ps.setString(1, status);
+            ps.setLong(2, id);
+
+            ps.executeUpdate();
+
+            return findById(id);
+
+        } catch (Exception e) {
+            throw handleException(e);
+        } finally {
+            close(con, ps);
+        }
+    }
     private Opportunity mapOpportunity(ResultSet rs)throws Exception
     {
         Opportunity opportunity=new Opportunity();

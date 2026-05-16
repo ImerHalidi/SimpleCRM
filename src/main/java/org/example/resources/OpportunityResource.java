@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.example.domain.Opportunity;
 import org.example.services.OpportunityService;
 import org.example.services.OpportunityServiceImpl;
-
+import javax.ws.rs.PathParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -54,7 +54,16 @@ public class OpportunityResource {
                     .build();
     }
 
+    @PUT
+    @Path("/{id}/status/{status}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateStatus(
+            @PathParam("id") Long id,
+            @PathParam("status") String status) {
 
+        return Response.ok(gson.toJson(opportunityService.changeStatus(id, status)))
+                .build();
+    }
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
