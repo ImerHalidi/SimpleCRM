@@ -83,6 +83,17 @@ public class CustomerResource {
     }
 
 
+    @GET
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchByName(@QueryParam("name") String name) {
+
+        return Response.ok(
+                gson.toJson(customerService.searchByName(name))
+        ).build();
+    }
+
+
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)

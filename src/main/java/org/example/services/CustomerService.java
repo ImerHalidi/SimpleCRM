@@ -8,4 +8,6 @@ public interface CustomerService {
     List<Customer>findAll();
     Customer update(Long id,Customer customer);
     boolean delete(Long id);
+    List<Customer>searchByName(String name);
+
 }

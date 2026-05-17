@@ -25,6 +25,9 @@ public class CustomerServiceImpl extends abstractService implements CustomerServ
         public static final String UPDATE_CUSTOMER = "UPDATE customer SET name=?,industry=?,email=?,phone=?,status=?,updated_at=NOW() WHERE id= ?";
 
         public static final String DELETE_CUSTOMER = "DELETE FROM customer where id=?";
+
+        public static final String SEARCH_BY_CUSTOMER_NAME="SELECT * FROM customer WHERE name LIKE ?";
+
     }
 
 
@@ -92,15 +95,17 @@ public class CustomerServiceImpl extends abstractService implements CustomerServ
     }
 
     @Override
-    public List<Customer>findAll(){
+    public List<Customer>searchByName(String name){
         List<Customer>customers=new ArrayList<>();
         Connection con=null;
         ResultSet rs=null;
         PreparedStatement ps=null;
         try {
             con =getConnection();
-            ps=con.prepareStatement(Sql.FIND_ALL);
+            ps=con.prepareStatement(Sql.SEARCH_BY_CUSTOMER_NAME);
+            ps.setString(1,"%" +name+"%");
             rs= ps.executeQuery();
+
 
             while (rs.next()){
                 customers.add(mapCostumer(rs));
@@ -173,6 +178,30 @@ public class CustomerServiceImpl extends abstractService implements CustomerServ
     }
 
 
+    @Override
+    public List<Customer>findAll(){
+        List<Customer>customers=new ArrayList<>();
+        Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement ps=null;
+        try {
+            con =getConnection();
+            ps=con.prepareStatement(Sql.FIND_ALL);
+            rs= ps.executeQuery();
+
+            while (rs.next()){
+                customers.add(mapCostumer(rs));
+            }
+            return customers;
+
+        }
+        catch (Exception e){
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps,rs);
+        }
+    }
 
 
 
