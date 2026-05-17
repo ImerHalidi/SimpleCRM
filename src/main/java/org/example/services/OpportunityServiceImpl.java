@@ -1,13 +1,11 @@
 package org.example.services;
 
-import com.google.gson.annotations.SerializedName;
 import org.example.common.abstractService;
 import org.example.domain.Opportunity;
 import org.example.exceptions.ValidationException;
 import org.example.exceptions.NotFoundException;
 
 
-import java.awt.geom.RectangularShape;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +34,8 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
 
         public static final String SUMMARY_BY_STATUS =
                 "SELECT status, SUM(`value`) AS total_value FROM opportunity GROUP BY status";
+
+        public static final String COUNT_BY_STATUS="SELECT status,COUNT(*) AS total FROM opportunity GROUP BY status ";
     }
 
     @Override
@@ -302,6 +302,34 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
                 );
             }
             return summary;
+
+        } catch (Exception e) {
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps,rs);
+        }
+    }
+
+
+    @Override
+    public Map<String, Integer> getcountByStatus() {
+        Map<String ,Integer> result =new HashMap<>();
+        Connection con=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+
+        try {
+            con=getConnection();
+            ps= con.prepareStatement(Sql.COUNT_BY_STATUS);
+            rs=ps.executeQuery();
+            while (rs.next()){
+                result.put(
+                        rs.getString("status"),
+                        rs.getInt("total")
+                );
+            }
+            return result;
 
         } catch (Exception e) {
             throw handleException(e);

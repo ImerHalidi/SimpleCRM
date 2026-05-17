@@ -54,6 +54,24 @@ public class OpportunityResource {
                     .build();
     }
 
+
+
+    @GET
+    @Path("/summary")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSummaryByStatus(){
+            return Response.ok(gson.toJson(opportunityService.getSummaryByStatus())).build();
+    }
+
+    @GET
+    @Path("/status-count")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response countByStatus(){
+        return Response.ok(gson.toJson(opportunityService.getcountByStatus())).build();
+    }
+
+
+
     @PUT
     @Path("/{id}/status/{status}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,14 +81,6 @@ public class OpportunityResource {
 
         return Response.ok(gson.toJson(opportunityService.changeStatus(id, status)))
                 .build();
-    }
-
-
-    @GET
-    @Path("/summary")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getSummaryByStatus(){
-            return Response.ok(gson.toJson(opportunityService.getSummaryByStatus())).build();
     }
 
 

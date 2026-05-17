@@ -15,5 +15,6 @@ public interface OpportunityService {
     List<Opportunity> filter(String status,Long customerId);
     Opportunity changeStatus(Long id, String status);
     Map<String ,Double> getSummaryByStatus();
+    Map<String,Integer> getcountByStatus();
 
 }
