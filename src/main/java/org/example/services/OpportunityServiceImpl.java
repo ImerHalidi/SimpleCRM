@@ -13,7 +13,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OpportunityServiceImpl extends abstractService implements OpportunityService {
     public static class Sql{
@@ -31,6 +33,9 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
 
         public static final String CHANGE_STATUS =
                 "UPDATE opportunity SET status = ?, updated_at = NOW() WHERE id = ?";
+
+        public static final String SUMMARY_BY_STATUS =
+                "SELECT status, SUM(`value`) AS total_value FROM opportunity GROUP BY status";
     }
 
     @Override
@@ -278,6 +283,34 @@ public class OpportunityServiceImpl extends abstractService implements Opportuni
             close(con, ps);
         }
     }
+
+    @Override
+    public Map<String, Double> getSummaryByStatus() {
+        Map<String ,Double>summary=new HashMap<>();
+        Connection con=null;
+        PreparedStatement ps=null;
+        ResultSet rs=null;
+
+        try {
+            con=getConnection();
+            ps= con.prepareStatement(Sql.SUMMARY_BY_STATUS);
+            rs=ps.executeQuery();
+            while (rs.next()){
+                summary.put(
+                        rs.getString("status"),
+                        rs.getDouble("total_value")
+                );
+            }
+            return summary;
+
+        } catch (Exception e) {
+            throw handleException(e);
+        }
+        finally {
+            close(con,ps,rs);
+        }
+    }
+
     private Opportunity mapOpportunity(ResultSet rs)throws Exception
     {
         Opportunity opportunity=new Opportunity();

@@ -64,6 +64,16 @@ public class OpportunityResource {
         return Response.ok(gson.toJson(opportunityService.changeStatus(id, status)))
                 .build();
     }
+
+
+    @GET
+    @Path("/summary")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSummaryByStatus(){
+            return Response.ok(gson.toJson(opportunityService.getSummaryByStatus())).build();
+    }
+
+
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
