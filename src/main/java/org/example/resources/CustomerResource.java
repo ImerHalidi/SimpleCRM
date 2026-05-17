@@ -11,12 +11,15 @@ import org.example.domain.Customer;
 import org.example.domain.InteractionLog;
 import org.example.domain.Opportunity;
 import org.example.services.*;
+import org.example.services.InteractionLogService;
+import org.example.services.InteractionLogServiceImpl;
 
 @Path("/customers")
 public class CustomerResource {
     private final InteractionLogService interactionLogService = new InteractionLogServiceImpl();
     private final OpportunityService opportunityService = new OpportunityServiceImpl();
     private final CustomerService customerService = new CustomerServiceImpl();
+
 
     private final Gson gson = new Gson();
 
@@ -69,6 +72,15 @@ public class CustomerResource {
                 .build();
     }
 
+    @GET
+    @Path("/{id}/interactions/detailed")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findDetailedInteractionsByCustomerId(@PathParam("id") Long id) {
+
+        return Response.ok(
+                gson.toJson(interactionLogService.findDetailedInteractionsByCustomerId(id))
+        ).build();
+    }
 
 
     @PUT

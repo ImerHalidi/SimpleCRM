@@ -11,7 +11,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InteractionLogServiceImpl extends abstractService implements InteractionLogService {
     public static class Sql{
@@ -25,6 +27,15 @@ public class InteractionLogServiceImpl extends abstractService implements Intera
         public static final String DELETE_OPPORTUNITY="DELETE FROM interaction_log where id=?";
 
         public static final String FIND_BY_CUSTOMER_ID="SELECT * FROM interaction_log where customer_id=?";
+
+        public static final String FIND_DETAILED_INTERACTIONS_BY_CUSTOMER_ID =
+                "SELECT il.*, " +
+                        "c.name AS customer_name, " +
+                        "cp.full_name AS contact_person_name " +
+                        "FROM interaction_log il " +
+                        "LEFT JOIN customer c ON c.id = il.customer_id " +
+                        "LEFT JOIN contact_person cp ON cp.id = il.contact_person_id " +
+                        "WHERE il.customer_id = ?";
     }
 
     @Override
@@ -191,6 +202,55 @@ public class InteractionLogServiceImpl extends abstractService implements Intera
         close(con,ps);
     }
    }
+
+
+    @Override
+    public List<Map<String, Object>> findDetailedInteractionsByCustomerId(Long customerId) {
+        List<Map<String, Object>> interactions = new ArrayList<>();
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = getConnection();
+
+            ps = con.prepareStatement(Sql.FIND_DETAILED_INTERACTIONS_BY_CUSTOMER_ID);
+            ps.setLong(1, customerId);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Map<String, Object> item = new HashMap<>();
+
+                item.put("id", rs.getLong("id"));
+                item.put("customer_id", rs.getLong("customer_id"));
+                item.put("customer_name", rs.getString("customer_name"));
+
+                long contactPersonId = rs.getLong("contact_person_id");
+                if (rs.wasNull()) {
+                    item.put("contact_person_id", null);
+                    item.put("contact_person_name", null);
+                } else {
+                    item.put("contact_person_id", contactPersonId);
+                    item.put("contact_person_name", rs.getString("contact_person_name"));
+                }
+
+                item.put("type", rs.getString("type"));
+                item.put("notes", rs.getString("notes"));
+                item.put("created_at", rs.getString("created_at"));
+
+                interactions.add(item);
+            }
+
+            return interactions;
+
+        } catch (Exception e) {
+            throw handleException(e);
+        } finally {
+            close(con, ps, rs);
+        }
+    }
 
    private InteractionLog mapInteractionLog(ResultSet rs)throws Exception{
         InteractionLog interactionLogs =new InteractionLog();
