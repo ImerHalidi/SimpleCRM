@@ -1,34 +1,53 @@
 # Simple CRM API
 
-## Project Overview
+## Overview
 
-Simple CRM API is a backend Customer Relationship Management system developed using Java, Jersey (JAX-RS), Maven, Tomcat, and MySQL.
+Simple CRM API is a RESTful Customer Relationship Management backend application developed using Java, Jersey (JAX-RS), JDBC, Maven, Apache Tomcat, and MySQL.
 
-The project provides RESTful API endpoints for managing:
+The project was built to simulate a real-world CRM system that allows businesses to manage:
 
-* Customers
-* Contact Persons
-* Opportunities
-* Interaction Logs
+* customers
+* contact persons
+* sales opportunities
+* customer interactions
 
-The system supports full CRUD operations, filtering, search functionality, business logic endpoints, SQL aggregation queries, JOIN operations, validation, and global exception handling.
+The system includes:
+
+* CRUD operations
+* filtering & search
+* business logic endpoints
+* SQL JOIN queries
+* aggregation queries
+* validation layer
+* global exception handling
+* REST API architecture
 
 ---
 
 # Technologies Used
 
-* Java
-* Jersey (JAX-RS)
-* Maven
-* Apache Tomcat
-* MySQL
-* JDBC
-* Gson
-* Postman
+| Technology      | Purpose                |
+| --------------- | ---------------------- |
+| Java            | Backend development    |
+| Jersey (JAX-RS) | REST API framework     |
+| JDBC            | Database communication |
+| MySQL           | Relational database    |
+| Apache Tomcat   | Application server     |
+| Maven           | Dependency management  |
+| Gson            | JSON serialization     |
+| Postman         | API testing            |
 
 ---
 
-# Project Structure
+# Architecture
+
+The project follows a layered architecture:
+
+```text
+Resource Layer → Service Layer → Database Layer
+```
+
+## Project Structure
 
 ```text
 src/main/java/org/example
@@ -44,123 +63,142 @@ src/main/java/org/example
 
 ---
 
+# Database Tables
+
+## customer
+
+Stores customer information.
+
+## contact_person
+
+Stores customer representatives linked to customers using foreign keys.
+
+## opportunity
+
+Stores sales opportunities and opportunity statuses.
+
+## interaction_log
+
+Stores customer communication history.
+
+---
+
 # Features
 
-## Customer Management
+# Customer Management
 
 * Create customer
 * Update customer
 * Delete customer
-* Get customer by ID
+* Find customer by ID
 * Get all customers
 * Search customer by name
+* Top customers endpoint
 
-## Contact Person Management
+# Contact Person Management
 
 * Create contact person
 * Update contact person
 * Delete contact person
-* Get contact person by ID
+* Find contact person by ID
 * Get all contact persons
 
-## Opportunity Management
+# Opportunity Management
 
 * Create opportunity
 * Update opportunity
 * Delete opportunity
-* Get opportunity by ID
+* Find opportunity by ID
 * Filter opportunities
 * Change opportunity status
-* Opportunity statistics
-* Opportunity summary by status
+* Opportunity summary endpoint
+* Opportunity status count endpoint
 
-## Interaction Log Management
+# Interaction Log Management
 
 * Create interaction log
 * Update interaction log
 * Delete interaction log
-* Get interaction log by ID
-* Get customer interactions
+* Find interaction log by ID
+* Customer interaction history
 * Detailed interaction endpoint using SQL JOIN
 
 ---
 
-# Business Logic Endpoints
+# API Endpoints
 
-## Opportunity Status Update
+# Customers
 
-```http
-PUT /api/opportunity/{id}/status/{status}
-```
-
-Example:
-
-```http
-PUT /api/opportunity/1/status/WON
-```
-
-Supported statuses:
-
-* NEW
-* IN_PROGRESS
-* WON
-* LOST
+| Method | Endpoint                      | Description        |
+| ------ | ----------------------------- | ------------------ |
+| POST   | `/api/customer`               | Create customer    |
+| GET    | `/api/customer`               | Get all customers  |
+| GET    | `/api/customer/{id}`          | Get customer by ID |
+| PUT    | `/api/customer/{id}`          | Update customer    |
+| DELETE | `/api/customer/{id}`          | Delete customer    |
+| GET    | `/api/customer/search?name=`  | Search customers   |
+| GET    | `/api/customer/top-customers` | Top customers      |
 
 ---
 
-## Opportunity Status Count
+# Contact Persons
 
-```http
-GET /api/opportunity/status-count
-```
-
-Returns the number of opportunities grouped by status.
-
----
-
-## Opportunity Summary
-
-```http
-GET /api/opportunity/summary
-```
-
-Returns the total value of opportunities grouped by status.
+| Method | Endpoint                   | Description              |
+| ------ | -------------------------- | ------------------------ |
+| POST   | `/api/contact-person`      | Create contact person    |
+| GET    | `/api/contact-person`      | Get all contact persons  |
+| GET    | `/api/contact-person/{id}` | Get contact person by ID |
+| PUT    | `/api/contact-person/{id}` | Update contact person    |
+| DELETE | `/api/contact-person/{id}` | Delete contact person    |
 
 ---
 
-## Customer Detailed Interactions
+# Opportunities
 
-```http
-GET /api/customer/{id}/interactions/detailed
-```
-
-Uses SQL JOIN queries to return:
-
-* customer information
-* contact person information
-* interaction details
-
----
-
-## Top Customers
-
-```http
-GET /api/customer/top-customers
-```
-
-Returns customers with the highest opportunity values.
+| Method | Endpoint                                | Description           |
+| ------ | --------------------------------------- | --------------------- |
+| POST   | `/api/opportunity`                      | Create opportunity    |
+| GET    | `/api/opportunity`                      | Filter opportunities  |
+| GET    | `/api/opportunity/{id}`                 | Get opportunity by ID |
+| PUT    | `/api/opportunity/{id}`                 | Update opportunity    |
+| DELETE | `/api/opportunity/{id}`                 | Delete opportunity    |
+| PUT    | `/api/opportunity/{id}/status/{status}` | Change status         |
+| GET    | `/api/opportunity/summary`              | Opportunity summary   |
+| GET    | `/api/opportunity/status-count`         | Status count          |
 
 ---
 
-# Validation & Error Handling
+# Interaction Logs
 
-The project includes:
+| Method | Endpoint                                   | Description           |
+| ------ | ------------------------------------------ | --------------------- |
+| POST   | `/api/interaction-log`                     | Create interaction    |
+| GET    | `/api/interaction-log`                     | Get all interactions  |
+| GET    | `/api/interaction-log/{id}`                | Get interaction by ID |
+| PUT    | `/api/interaction-log/{id}`                | Update interaction    |
+| DELETE | `/api/interaction-log/{id}`                | Delete interaction    |
+| GET    | `/api/customer/{id}/interactions`          | Customer interactions |
+| GET    | `/api/customer/{id}/interactions/detailed` | Detailed interactions |
 
-* ValidationException handling
-* NotFoundException handling
-* Global exception handling
+---
 
-Errors are returned in JSON format:
+# Example Request
+
+## Create Customer
+
+```json
+{
+  "name": "BMW",
+  "industry": "Automotive",
+  "email": "bmw@test.com",
+  "phone": "+38970111222",
+  "status": "ACTIVE"
+}
+```
+
+---
+
+# Example Error Response
 
 ```json
 {
@@ -171,16 +209,29 @@ Errors are returned in JSON format:
 
 ---
 
-# Database
+# Validation & Exception Handling
 
-The project uses MySQL with relational tables:
+The application includes:
 
-* customer
-* contact_person
-* opportunity
-* interaction_log
+* ValidationException handling
+* NotFoundException handling
+* Global exception handling
 
-Relationships are implemented using foreign keys and JOIN queries.
+All errors are returned in JSON format.
+
+---
+
+# SQL Features Used
+
+The project demonstrates:
+
+* INNER JOIN
+* GROUP BY
+* Aggregate functions
+* Filtering
+* Foreign keys
+* CRUD queries
+* Prepared Statements
 
 ---
 
@@ -207,7 +258,7 @@ git clone https://github.com/ImerHalidi/SimpleCRM.git
 
 ## 2. Configure Database
 
-Create a MySQL database and update database credentials inside the project configuration.
+Create a MySQL database and configure database credentials.
 
 ## 3. Build Project
 
@@ -217,20 +268,28 @@ mvn clean install
 
 ## 4. Deploy on Tomcat
 
-Deploy the generated WAR file to Apache Tomcat.
+Deploy the generated WAR file into Apache Tomcat.
 
 ## 5. Run Application
 
-Example base URL:
+Base URL:
 
-```http
+```text
 http://localhost:8081/simple-crm-api/api
 ```
 
 ---
 
-# Author
+# Future Improvements
 
-Imer Halidi
+* JWT Authentication
+* Pagination
+* Swagger/OpenAPI Documentation
+* Unit Testing
+* Docker Support
 
 ---
+
+# Author
+
+Developed by Imer Halidi
