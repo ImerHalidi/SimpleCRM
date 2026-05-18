@@ -28,12 +28,7 @@ public class OpportunityResource {
                     .entity(gson.toJson(createdOpportunity))
                     .build();
         }
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getAll(){
-//            return Response.ok(gson.toJson(opportunityService.findAll()))
-//                    .build();
-//    }
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

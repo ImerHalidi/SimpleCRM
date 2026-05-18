@@ -6,10 +6,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.example.domain.ContactPerson;
 import org.example.domain.Customer;
-import org.example.domain.InteractionLog;
-import org.example.domain.Opportunity;
 import org.example.services.*;
 import org.example.services.InteractionLogService;
 import org.example.services.InteractionLogServiceImpl;

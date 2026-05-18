@@ -3,7 +3,6 @@ package org.example.resources;
 
 import com.google.gson.Gson;
 import org.example.domain.InteractionLog;
-import org.example.domain.Opportunity;
 import org.example.services.InteractionLogService;
 import org.example.services.InteractionLogServiceImpl;
 
@@ -11,7 +10,6 @@ import org.example.services.InteractionLogServiceImpl;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.awt.image.RescaleOp;
 
 @Path("/interactions")
 public class InteractionLogResource {

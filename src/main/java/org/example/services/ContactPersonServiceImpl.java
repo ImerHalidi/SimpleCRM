@@ -9,8 +9,6 @@ import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 
-import static org.example.common.DatabaseConnection.close;
-
 public class ContactPersonServiceImpl extends abstractService implements ContactPersonService {
     public static class Sql{
         public static final String INSERT_CONTACT="INSERT INTO contact_person(customer_id,full_name,email,phone,position) VALUES (?,?,?,?,?)";

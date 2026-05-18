@@ -1,7 +1,5 @@
 package org.example.services;
-import org.example.common.DatabaseConnection;
 import org.example.domain.Customer;
-import org.example.exceptions.ConflictException;
 import org.example.exceptions.NotFoundException;
 import org.example.exceptions.ValidationException;
 import org.example.common.abstractService;
@@ -10,9 +8,6 @@ import org.example.common.abstractService;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-
-import static org.example.common.DatabaseConnection.close;
-import static org.example.common.DatabaseConnection.getConnection;
 
 public class CustomerServiceImpl extends abstractService implements CustomerService {
     public static class Sql {

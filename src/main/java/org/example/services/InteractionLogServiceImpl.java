@@ -1,6 +1,5 @@
 package org.example.services;
 
-import org.example.common.AbstractEntity;
 import org.example.common.abstractService;
 import org.example.domain.InteractionLog;
 import org.example.exceptions.NotFoundException;
